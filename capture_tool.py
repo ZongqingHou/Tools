@@ -126,7 +126,6 @@ class Tool(QMainWindow, Ui_MainWindow):
 		self.video_signal = Capature()
 		self.video_signal.timeSignal.signal[str].connect(self.show_img)
 
-
 		self.capButton.clicked.connect(self.capture)
 		self.exitButton.clicked.connect(self.app_exit)
 		self.pathSelectionButton.clicked.connect(self.select_base_path)
