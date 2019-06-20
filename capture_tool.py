@@ -105,9 +105,6 @@ class CameraThread(QThread):
 		global global_frame
 		while self.running_flag:
 			ret, global_frame = self.capture.read()
-			
-			# if not ret:
-			# 	break
 
 	def stop(self):
 		self.running_flag = False
