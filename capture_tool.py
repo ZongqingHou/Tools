@@ -94,23 +94,26 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
-class Signal(QObject):
-	signal = pyqtSignal(str)
-
-class Capature(QThread):
-	def __init__(self, frequent=20):
-		QThread.__init__(self)
+global_frame = None
+class CameraThread(QThread):
+	def __init__(self, camera_address):
+		super(CameraThread, self).__init__()
 		self.running_flag = True
-		self.frequent = 1.0 / frequent
-		self.timeSignal = Signal()
+		self.capture = cv2.VideoCapture(camera_address)
 
 	def run(self):
+		global global_frame
 		while self.running_flag:
-			self.timeSignal.signal.emit("1")
-			time.sleep(self.frequent)
+			ret, global_frame = self.capture.read()
+			
+			if not ret:
+				break
 
 	def stop(self):
 		self.running_flag = False
+		time.sleep(0.1)
+
+		self.capture.release()
 
 class Tool(QMainWindow, Ui_MainWindow):
 	def __init__(self, video_capture=0):
@@ -122,20 +125,20 @@ class Tool(QMainWindow, Ui_MainWindow):
 		self.img_index = 0
 		self.previous_capture = None
 
-		self.video_capture = cv2.VideoCapture(video_capture)
-		self.video_signal = Capature()
-		self.video_signal.timeSignal.signal[str].connect(self.show_img)
 
 		self.capButton.clicked.connect(self.capture)
 		self.exitButton.clicked.connect(self.app_exit)
 		self.pathSelectionButton.clicked.connect(self.select_base_path)
 
 		self.imgpath.setText('Please select the image file path first!!!')
+
+		self.video_signal = CameraThread("")
 		self.video_signal.start()
 
 	def show_img(self):
-		ret, self.tmp_frame = self.video_capture.read()
+		global global_frame
 
+		self.tmp_frame = global_frame
 		tmp = copy.deepcopy(self.tmp_frame)
 		if self.previous_capture is not None:
 			height, width, channle = self.previous_capture.shape
