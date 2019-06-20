@@ -106,8 +106,8 @@ class CameraThread(QThread):
 		while self.running_flag:
 			ret, global_frame = self.capture.read()
 			
-			if not ret:
-				break
+			# if not ret:
+			# 	break
 
 	def stop(self):
 		self.running_flag = False
@@ -132,8 +132,12 @@ class Tool(QMainWindow, Ui_MainWindow):
 
 		self.imgpath.setText('Please select the image file path first!!!')
 
-		self.video_signal = CameraThread("")
+		self.video_signal = CameraThread("rtsp://admin:dw123456@192.168.50.201:554/cam/realmonitor?channel=1&subtype=0")
 		self.video_signal.start()
+
+		self.show_timer = QTimer(self)
+		self.show_timer.timeout.connect(self.show_img)
+		self.show_timer.start(125)
 
 	def show_img(self):
 		global global_frame
