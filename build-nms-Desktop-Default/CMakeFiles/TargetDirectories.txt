@@ -1,0 +1,3 @@
+/home/hdd/hdD_Git/little_tool/build-nms-Desktop-Default/CMakeFiles/rebuild_cache.dir
+/home/hdd/hdD_Git/little_tool/build-nms-Desktop-Default/CMakeFiles/edit_cache.dir
+/home/hdd/hdD_Git/little_tool/build-nms-Desktop-Default/CMakeFiles/nms.dir
